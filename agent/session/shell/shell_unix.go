@@ -75,7 +75,7 @@ func StartCommandExecutor(
 
 	if strings.TrimSpace(constants.GetShellCommand(shellProps)) == "" || isSessionLogger {
 
-		cmd = exec.Command("sh")
+		cmd = exec.Command("/bin/bash")
 
 	} else {
 		if appConfig.Agent.ContainerMode || appconfig.PluginNameNonInteractiveCommands == plugin.name {
@@ -93,7 +93,7 @@ func StartCommandExecutor(
 
 		} else {
 			commandArgs := append(utility.ShellPluginCommandArgs, constants.GetShellCommand(shellProps))
-			cmd = exec.Command("sh", commandArgs...)
+			cmd = exec.Command("/bin/bash", commandArgs...)
 		}
 	}
 
