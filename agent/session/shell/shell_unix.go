@@ -75,15 +75,13 @@ func StartCommandExecutor(
 
 	passwdUser := ""
 
-
 	//liwadman hack: test if runasuser is set. if set, pass that to the shell creator to use passwd shell
 	//if runasuser is not set, defaults to ssm user
 	if strings.TrimSpace(config.RunAsUser) == "" {
-			passwdUser = appconfig.DefaultRunAsUserName
-		} else{
-			passwdUser = config.RunAsUser
-		}
-	
+		passwdUser = appconfig.DefaultRunAsUserName
+	} else {
+		passwdUser = config.RunAsUser
+	}
 
 	if strings.TrimSpace(constants.GetShellCommand(shellProps)) == "" || isSessionLogger {
 
