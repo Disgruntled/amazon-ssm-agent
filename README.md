@@ -1,9 +1,11 @@
 [![ReportCard][ReportCard-Image]][ReportCard-URL]
 [![Build Status](https://travis-ci.org/aws/amazon-ssm-agent.svg?branch=mainline)](https://travis-ci.org/aws/amazon-ssm-agent)
 
-# Amazon SSM Agent
+# Amazon SSM Agent - Liwadman fork
 
 The Amazon EC2 Simple Systems Manager (SSM) Agent is software developed for the [Simple Systems Manager Service](http://docs.aws.amazon.com/ssm/latest/APIReference/Welcome.html). The SSM Agent is the primary component of a feature called Run Command.
+
+This is liwadman's fork. There is an essential difference here that session manager/run-command for linux no longer uses /bin/sh by default, but instead looks at the users set shell in /etc/passwd . If for any reason it fails to parse /etc/passwd for a given user entry, it defaults to /bin/sh
 
 ## Overview
 
