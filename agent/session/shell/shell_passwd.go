@@ -16,7 +16,7 @@
 
 // Package shell implements session shell plugin.
 
-//fork by liwadman@. Parses /etc/passwd, and sets the users shell as the
+//fork by liwadman@. Parses /etc/passwd, and sets the users shell as the shell defined in /etc/passwd. Defautls to /bin/sh
 package shell
 
 import (
@@ -33,7 +33,6 @@ func readFile() []string {
 		fmt.Println(err)
 	}
 	defer file.Close()
-	fmt.Println(file)
 
 	var lines []string
 	scanner := bufio.NewScanner(file)
@@ -41,10 +40,6 @@ func readFile() []string {
 		lines = append(lines, scanner.Text())
 	}
 	return lines //send lines back to caller
-	// fmt.Println(lines[0])
-	//fmt.Println(strings.Split(lines[0],":")) //split by colon
-	//line := strings.Split(lines[0],":")[6] //the shell is space 6
-	//fmt.Println(line)
 
 }
 
