@@ -73,9 +73,21 @@ func StartCommandExecutor(
 
 	appConfig := plugin.context.AppConfig()
 
+	passwdUser := ""
+
+
+	//liwadman hack: test if runasuser is set. if set, pass that to the shell creator to use passwd shell
+	//if runasuser is not set, defaults to ssm user
+	if strings.TrimSpace(config.RunAsUser) == "" {
+			passwdUser = appconfig.DefaultRunAsUserName
+		} else{
+			passwdUser = config.RunAsUser
+		}
+	
+
 	if strings.TrimSpace(constants.GetShellCommand(shellProps)) == "" || isSessionLogger {
 
-		cmd = exec.Command(getShell(config.RunAsUser))
+		cmd = exec.Command(getShell(passwdUser))
 
 	} else {
 		if appConfig.Agent.ContainerMode || appconfig.PluginNameNonInteractiveCommands == plugin.name {
@@ -93,7 +105,7 @@ func StartCommandExecutor(
 
 		} else {
 			commandArgs := append(utility.ShellPluginCommandArgs, constants.GetShellCommand(shellProps))
-			cmd = exec.Command(getShell(config.RunAsUser), commandArgs...)
+			cmd = exec.Command(getShell(passwdUser), commandArgs...)
 		}
 	}
 

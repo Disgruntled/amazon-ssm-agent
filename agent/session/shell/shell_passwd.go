@@ -16,71 +16,49 @@
 
 // Package shell implements session shell plugin.
 
-//fork by liwadman@. Parses /etc/passwd, and sets the users shell as the 
+//fork by liwadman@. Parses /etc/passwd, and sets the users shell as the
 package shell
 
 import (
-	"bytes"
-	"context"
-	"encoding/json"
-	"errors"
+	"bufio"
 	"fmt"
 	"os"
-	"os/exec"
-	"path/filepath"
-	"strconv"
 	"strings"
-	"syscall"
-	"time"
-	"bufio"
-
-	"github.com/aws/amazon-ssm-agent/agent/appconfig"
-	agentContracts "github.com/aws/amazon-ssm-agent/agent/contracts"
-	"github.com/aws/amazon-ssm-agent/agent/log"
-	mgsConfig "github.com/aws/amazon-ssm-agent/agent/session/config"
-	mgsContracts "github.com/aws/amazon-ssm-agent/agent/session/contracts"
-	"github.com/aws/amazon-ssm-agent/agent/session/shell/constants"
-	"github.com/aws/amazon-ssm-agent/agent/session/shell/execcmd"
-	"github.com/aws/amazon-ssm-agent/agent/session/utility"
-	"github.com/creack/pty"
-	"github.com/google/shlex"
 )
 
-
-func readFile() ([]string, error) {
+func readFile() []string {
 	//slurp up /etc/passwd
-    file, err := os.Open("/etc/passwd")
-    if err != nil {
-       fmt.Println(err)
-    }
-    defer file.Close()
+	file, err := os.Open("/etc/passwd")
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer file.Close()
 	fmt.Println(file)
-	
+
 	var lines []string
-    scanner := bufio.NewScanner(file)
-    for scanner.Scan() {
-        lines = append(lines, scanner.Text())
-    }
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
 	return lines //send lines back to caller
-   // fmt.Println(lines[0])
+	// fmt.Println(lines[0])
 	//fmt.Println(strings.Split(lines[0],":")) //split by colon
 	//line := strings.Split(lines[0],":")[6] //the shell is space 6
 	//fmt.Println(line)
-	
+
 }
 
-func getShell(userName) ([]string, error) {
+func getShell(userName string) string {
 	//get the users shell from their username
-    passwd := readFile("/etc/passwd")
+	passwd := readFile()
 
 	for _, line := range passwd {
-		line = strings.Split(line, ":")
-		if line[0] == userName {
-			return line[6] //return the shell from /etc/passwd. We don't need to sanity check this because if it's wrong they have bigger problems.
+		slice := strings.Split(line, ":")
+		if slice[0] == userName {
+			return slice[6] //return the shell from /etc/passwd. We don't need to sanity check this because if it's wrong they have bigger problems.
 		}
 
-		
-
 	}
-
+	//default to sh, widest compatability
+	return "/bin/sh"
 }
